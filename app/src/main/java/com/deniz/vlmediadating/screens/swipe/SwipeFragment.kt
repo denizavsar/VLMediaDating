@@ -112,7 +112,7 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
             viewHolder: RecyclerView.ViewHolder
         ): Int {
             // Only allow swiping for the top card view
-            return if (viewHolder.bindingAdapterPosition == 0) {
+            return if (viewHolder.adapterPosition == 0) {
                 super.getSwipeDirs(recyclerView, viewHolder)
             } else {
                 0 // Disable swiping for other items
