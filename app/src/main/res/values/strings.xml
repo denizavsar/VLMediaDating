@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">VLMediaDating</string>
+
+    <!-- STATUS VIEW -->
+    <string name="status_dead">Dead</string>
+    <string name="status_alive">Alive</string>
+    <string name="status_unknown">Unknown</string>
+</resources>

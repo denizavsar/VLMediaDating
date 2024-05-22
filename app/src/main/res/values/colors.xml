@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
+    <color name="red_40">#66FF0000</color>
+    <color name="red">#FF0000</color>
+    <color name="green_40">#6600FF00</color>
+    <color name="green">#00FF00</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- STATUS VIEW -->
+    <color name="status_unknown">#606060</color>
+    <color name="status_unknown_40">#66606060</color>
+    <color name="status_green">#5FFF5F</color>
+    <color name="status_green_40">#665FFF5F</color>
+    <color name="status_red">#FF4747</color>
+    <color name="status_red_40">#66FF4747</color>
+</resources>
