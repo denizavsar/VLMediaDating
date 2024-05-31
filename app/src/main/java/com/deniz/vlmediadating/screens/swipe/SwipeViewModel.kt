@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.deniz.vlmediadating.api.API
 import com.deniz.vlmediadating.api.data.User
 import com.deniz.vlmediadating.utils.Constants
+import com.deniz.vlmediadating.utils.VLDatingLogger
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SwipeViewModel : ViewModel() {
@@ -22,10 +24,16 @@ class SwipeViewModel : ViewModel() {
 
     fun fetchCharacters() {
         viewModelScope.launch {
-            val response = API.getUsers(currentPage ?: Constants.API_START_PAGE)
-            val nextKey = response.info.next?.substringAfter("page=")?.toInt()
-            currentPage = nextKey
-            _users.value = response.results
+            try {
+                val response = API.getUsers(currentPage ?: Constants.API_START_PAGE)
+                val nextKey = response.info.next?.substringAfter("page=")?.toInt()
+                currentPage = nextKey
+                _users.value = response.results
+            } catch (e: Exception) {
+                VLDatingLogger.logError(e.message ?: "Exception - fetchCharacters")
+                delay(2500)
+                fetchCharacters()
+            }
         }
     }
 }

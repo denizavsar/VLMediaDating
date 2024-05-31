@@ -1,9 +1,7 @@
 package com.deniz.vlmediadating.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.deniz.vlmediadating.R
 import com.deniz.vlmediadating.api.data.User
@@ -14,18 +12,28 @@ import com.squareup.picasso.Picasso
 class UserCardAdapter : RecyclerView.Adapter<UserCardAdapter.UserCardViewHolder>() {
 
     private var users: MutableList<User> = mutableListOf()
+    private var swipedUsers: MutableList<User> = mutableListOf()
 
     fun removeTopUser() {
         if (users.isEmpty()) return
 
-        users.removeAt(0)
+        val user = users.removeAt(0)
         notifyItemRemoved(0)
+        swipedUsers.add(0, user)
     }
 
     fun addUsersToList(newUsers: List<User>) {
         val currentPosition = users.size
         users.addAll(newUsers)
         notifyItemRangeInserted(currentPosition, newUsers.size)
+    }
+
+    fun revert() {
+        if (swipedUsers.isEmpty()) return
+
+        val user = swipedUsers.removeAt(0)
+        users.add(0, user)
+        notifyItemInserted(0)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserCardViewHolder {
@@ -44,20 +52,14 @@ class UserCardAdapter : RecyclerView.Adapter<UserCardAdapter.UserCardViewHolder>
     class UserCardViewHolder(private val binding: CardLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val aliveString = binding.root.resources.getString(R.string.status_alive)
-        private val deadString = binding.root.resources.getString(R.string.status_dead)
-
         fun bind(user: User) {
             with(binding) {
                 nameTextView.text = user.name
                 locationTextView.text = user.location.name
 
-                val status = when (user.status) {
-                    aliveString -> StatusView.Status.ALIVE
-                    deadString -> StatusView.Status.DEAD
-                    else -> StatusView.Status.UNKNOWN
+                StatusView.Status.convertToStatus(user.status).let { status ->
+                    statusView.setStatus(status)
                 }
-                statusView.setStatus(status)
 
                 Picasso
                     .get()

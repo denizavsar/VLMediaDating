@@ -3,6 +3,7 @@ package com.deniz.vlmediadating.utils
 object Constants {
     const val PREFETCH_ITEM_COUNT: Int = 10
     const val API_START_PAGE: Int = 1
+    const val ANIMATION_DURATION: Long = 375
 
     // Card
     const val MAX_CARD_ROTATION_DEGREE: Float = 18F

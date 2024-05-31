@@ -58,6 +58,7 @@ android {
 
 dependencies {
 
+    implementation(libs.shimmer)
     implementation(libs.picasso)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

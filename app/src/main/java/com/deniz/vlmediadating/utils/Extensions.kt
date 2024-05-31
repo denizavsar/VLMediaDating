@@ -6,6 +6,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 
+fun View.fadeOut(withEndAction: () -> Unit) {
+    if (alpha == 0f) return
+    animate()
+        .alpha(0f)
+        .setDuration(Constants.ANIMATION_DURATION)
+        .withEndAction(withEndAction)
+        .start()
+}
+
 fun ViewGroup.performSwipeToLeft(target: View, distance: Float) {
     this.performSwipe(target, distanceX = -distance, distanceY = 0f)
 }

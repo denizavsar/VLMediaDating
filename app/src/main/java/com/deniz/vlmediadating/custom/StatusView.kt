@@ -18,7 +18,17 @@ class StatusView @JvmOverloads constructor(
     enum class Status {
         DEAD,
         ALIVE,
-        UNKNOWN
+        UNKNOWN;
+
+        companion object {
+            fun convertToStatus(statusString: String): Status {
+                return when (statusString) {
+                    "Dead" -> DEAD
+                    "Alive" -> ALIVE
+                    else -> UNKNOWN
+                }
+            }
+        }
     }
 
     private var _binding: StatusViewBinding? = null
@@ -51,15 +61,22 @@ class StatusView @JvmOverloads constructor(
 
             Status.ALIVE -> {
                 backgroundDrawable =
-                    ContextCompat.getDrawable(context, R.drawable.status_view_alive_background)!!
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.status_view_alive_background
+                    )!!
                 iconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_status_alive)!!
                 currentStatus = context.getString(R.string.status_alive)
             }
 
             Status.UNKNOWN -> {
                 backgroundDrawable =
-                    ContextCompat.getDrawable(context, R.drawable.status_view_unknown_background)!!
-                iconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_status_unknown)!!
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.status_view_unknown_background
+                    )!!
+                iconDrawable =
+                    ContextCompat.getDrawable(context, R.drawable.ic_status_unknown)!!
                 currentStatus = context.getString(R.string.status_unknown)
             }
         }

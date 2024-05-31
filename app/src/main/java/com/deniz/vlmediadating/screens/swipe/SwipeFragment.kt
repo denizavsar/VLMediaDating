@@ -1,10 +1,13 @@
 package com.deniz.vlmediadating.screens.swipe
 
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,10 +18,10 @@ import com.deniz.vlmediadating.databinding.FragmentSwipeBinding
 import com.deniz.vlmediadating.swipable.StackedItemAnimator
 import com.deniz.vlmediadating.swipable.StackedLayoutManager
 import com.deniz.vlmediadating.utils.Constants
+import com.deniz.vlmediadating.utils.fadeOut
 import com.deniz.vlmediadating.utils.performSwipeToLeft
 import com.deniz.vlmediadating.utils.performSwipeToRight
 import kotlin.math.abs
-import kotlin.math.min
 
 class SwipeFragment : Fragment(R.layout.fragment_swipe) {
 
@@ -33,7 +36,7 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSwipeBinding.inflate(inflater, container, false);
+        _binding = FragmentSwipeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -52,15 +55,26 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
             }
 
             likeButton.setOnClickListener {
-                cardRecyclerView.performSwipeToRight(cardRecyclerView.getChildAt(0), 50f)
+                if (cardRecyclerView.childCount > 0)
+                    cardRecyclerView.performSwipeToRight(cardRecyclerView.getChildAt(0), 50f)
             }
 
             dislikeButton.setOnClickListener {
-                cardRecyclerView.performSwipeToLeft(cardRecyclerView.getChildAt(0), 50f)
+                if (cardRecyclerView.childCount > 0)
+                    cardRecyclerView.performSwipeToLeft(cardRecyclerView.getChildAt(0), 50f)
+            }
+
+            revertButton.setOnClickListener {
+                cardAdapter.revert()
             }
         }
 
         viewModel.users.observe(viewLifecycleOwner) { newUsers ->
+            binding.placeholderCard.fadeOut {
+                binding.placeholderCard.stopShimmer()
+                binding.placeholderCard.isVisible = false
+            }
+
             cardAdapter.addUsersToList(newUsers)
         }
     }
@@ -86,6 +100,9 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
             if (adapter.itemCount < Constants.PREFETCH_ITEM_COUNT) {
                 viewModel.fetchCharacters()
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                viewHolder.itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            }
         }
 
         override fun onChildDraw(
@@ -103,6 +120,15 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
                     )
                 ) // Limit rotation
             itemView.rotation = rotationDegrees
+
+            if (dX > 0) {
+                binding.root.setTransition(R.id.like_transition)
+            } else {
+                binding.root.setTransition(R.id.dislike_transition)
+            }
+            val progress = 0.0f + abs(dX) / recyclerView.width
+            if (progress != 1f)
+                binding.root.progress = progress
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }

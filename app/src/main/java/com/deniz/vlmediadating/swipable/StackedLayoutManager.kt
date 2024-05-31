@@ -1,10 +1,7 @@
 package com.deniz.vlmediadating.swipable
 
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.deniz.vlmediadating.R
 import com.deniz.vlmediadating.utils.Constants
-import com.google.android.material.card.MaterialCardView
 
 class StackedLayoutManager : RecyclerView.LayoutManager() {
 
